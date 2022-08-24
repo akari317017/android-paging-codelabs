@@ -59,7 +59,7 @@ class SearchRepositoriesViewModel(
         val queriesScrolled = actionStateFlow
             .filterIsInstance<UiAction.Scroll>()
             .distinctUntilChanged()
-            // これは最後にスクロールしったqueryをキャッシュしながら、flowを"hot"に保つために共有されるものです。
+            // これは最後にスクロールしたqueryをキャッシュしながら、flowを"hot"に保つために共有されるものです。
             // そうしないと、floatMapLatestを起動するたびにlastQueryScrolledが失われます
             .shareIn(
                 scope = viewModelScope,

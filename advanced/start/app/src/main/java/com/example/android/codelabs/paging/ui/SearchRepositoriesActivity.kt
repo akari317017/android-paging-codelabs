@@ -59,6 +59,10 @@ class SearchRepositoriesActivity : AppCompatActivity() {
     /**
      * Binds the [UiState] provided  by the [SearchRepositoriesViewModel] to the UI,
      * and allows the UI to feed back user actions to it.
+     * PagingDataAdapter には次の 3 つの便利なメソッドがあります。
+     * 1. withLoadStateHeader - ヘッダーのみを表示する場合。リストが先頭への項目の追加のみをサポートする場合に使用してください。
+     * 1. withLoadStateFooter - フッターのみを表示する場合。リストが末尾への項目の追加のみをサポートする場合に使用してください。
+     * 1. withLoadStateHeaderAndFooter - ヘッダーとフッターを表示する場合。リストが両方向にページングできる場合です。
      */
     private fun ActivitySearchRepositoriesBinding.bindState(
         uiState: StateFlow<UiState>,
@@ -66,7 +70,11 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         uiActions: (UiAction) -> Unit
     ) {
         val repoAdapter = ReposAdapter()
-        list.adapter = repoAdapter
+
+        list.adapter = repoAdapter.withLoadStateHeaderAndFooter(
+            header = ReposLoadStateAdapter { repoAdapter.retry() },
+            footer = ReposLoadStateAdapter { repoAdapter.retry() }
+        )
 
         bindSearch(
             uiState = uiState,
